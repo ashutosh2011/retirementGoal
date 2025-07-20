@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retirement Goal Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding-top: 40px;
+    }
+
+    .calculator {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>Retirement Goal Calculator</h2>
+    
+    <label for="monthlyExpense">Monthly Expense (₹):</label>
+    <input type="number" id="monthlyExpense" placeholder="e.g. 50000" />
+
+    <label for="growthRate">Expected Growth Rate (%):</label>
+    <input type="number" id="growthRate" placeholder="e.g. 8" />
+
+    <label for="inflationRate">Expected Inflation Rate (%):</label>
+    <input type="number" id="inflationRate" placeholder="e.g. 6" />
+
+    <label for="years">How many years will you need the fund?:</label>
+    <input type="number" id="years" placeholder="e.g. 30" />
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const monthlyExpense = parseFloat(document.getElementById("monthlyExpense").value);
+      const growthRate = parseFloat(document.getElementById("growthRate").value);
+      const inflationRate = parseFloat(document.getElementById("inflationRate").value);
+      const years = parseInt(document.getElementById("years").value);
+
+      if (isNaN(monthlyExpense) || isNaN(growthRate) || isNaN(inflationRate) || isNaN(years)) {
+        alert("Please fill in all fields with valid numbers.");
+        return;
+      }
+
+      const annualExpense = monthlyExpense * 12;
+      const realRate = (1 + growthRate / 100) / (1 + inflationRate / 100) - 1;
+
+      let corpus;
+      if (realRate === 0) {
+        corpus = annualExpense * years;
+      } else {
+        corpus = annualExpense * ((1 - Math.pow(1 + realRate, -years)) / realRate);
+      }
+
+      document.getElementById("result").textContent =
+        `You need approximately ₹${corpus.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} today to retire.`;
+    }
+  </script>
+</body>
+</html>
